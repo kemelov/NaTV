@@ -1,37 +1,23 @@
 package kg.natv.TextAd.services.impl;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import kg.natv.TextAd.mappers.ChannelMapper;
-import kg.natv.TextAd.models.Ad;
 import kg.natv.TextAd.models.Channel;
-
 import kg.natv.TextAd.models.DTOs.ChannelDTO;
 import kg.natv.TextAd.repositories.ChannelRepo;
-import kg.natv.TextAd.services.ChannelService;
-import lombok.SneakyThrows;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 
 @Service
-public class ChannelServiceImpl implements ChannelService {
+public class ChannelServiceImpl implements kg.natv.TextAd.services.ChannelService {
     private final ChannelRepo channelRepo;
     private final ChannelMapper channelMapper;
     private final ObjectMapper objectMapper;
@@ -46,7 +32,7 @@ public class ChannelServiceImpl implements ChannelService {
     public ChannelDTO findById(Long id) {
         Optional<Channel> channel = channelRepo.findById(id);
         if (channel.isPresent()){
-            return channelMapper.ToDTO(channel.get());
+            return channelMapper.toDTO(channel.get());
         } else {
             throw new NoSuchElementException("Канал не найден");
         }
@@ -73,20 +59,20 @@ public class ChannelServiceImpl implements ChannelService {
         Channel channel = channelMapper.toEntity(channelDTO);
         channel.setActive(true);
         channel = channelRepo.save(channel);
-        return channelMapper.ToDTO(channel);
+        return channelMapper.toDTO(channel);
     }
 
     @Transactional
     @Override
-    public ChannelDTO update(Long id, String json) throws IOException {
+    public ChannelDTO update(Long id, ChannelDTO channelDTO) throws IOException {
         Optional<Channel> optionalChannel = channelRepo.findById(id);
         if (optionalChannel.isEmpty()) {
-            throw new NoSuchElementException("No channel found with id " + id);
+            throw new NoSuchElementException("Нет канала с таким ID");
         }
         Channel channel = optionalChannel.get();
         ObjectReader objectReader = objectMapper.readerForUpdating(channel);
-        channel = objectReader.readValue(json);
-        return channelMapper.ToDTO(channel);
+        channel = objectReader.readValue(objectMapper.writeValueAsString(channelDTO));
+        return channelMapper.toDTO(channel);
     }
 
     @Override

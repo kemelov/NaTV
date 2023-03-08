@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,7 +28,7 @@ public class Channel {
     private List<Price> prices;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
-    private List<Discount> discounts;
+    private List<Discount> discounts = new ArrayList<>();
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<Ad> ads;

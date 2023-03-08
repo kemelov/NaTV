@@ -1,10 +1,6 @@
 package kg.natv.TextAd.controllers;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
-import kg.natv.TextAd.mappers.ChannelMapper;
-import kg.natv.TextAd.models.Channel;
 import kg.natv.TextAd.models.DTOs.ChannelDTO;
 import kg.natv.TextAd.services.ChannelService;
 import kg.natv.TextAd.validations.Create;
@@ -18,16 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/channel")
 public class ChannelController {
     private final ChannelService channelService;
-    private final ObjectMapper objectMapper;
 
-    public ChannelController(ChannelService channelService, ObjectMapper objectMapper){
-        this.objectMapper = objectMapper;
+    public ChannelController(ChannelService channelService){
         this.channelService = channelService;
     }
 
@@ -47,8 +40,8 @@ public class ChannelController {
     }
 
     @ApiOperation("Поиск канала по ID")
-    @GetMapping("/findById")
-    public ChannelDTO findById(@RequestParam Long id) {
+    @GetMapping("/findById/{id}")
+    public ChannelDTO findById(@PathVariable Long id) {
         return channelService.findById(id);
     }
 
@@ -65,17 +58,19 @@ public class ChannelController {
     }
 
     @ApiOperation("Редактирование данных канала по ID")
-    @PatchMapping("/update")
-    public ResponseEntity<?> update(@RequestParam Long id,@RequestBody ChannelDTO channelDTO) throws IOException {
-        String json = objectMapper.writeValueAsString(channelDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(channelService.update(id, json));
+    @PatchMapping("/update/{channelId}")
+    public ResponseEntity<?> update(@RequestParam Long channelId,@RequestBody ChannelDTO channelDTO) throws IOException {
+
+        return ResponseEntity.status(HttpStatus.OK).body(channelService.update(channelId, channelDTO));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam Long id){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
         channelService.findById(id);
         channelService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+
 
 }
