@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 @Data
-@JsonIgnoreProperties(value = {"isActive", "discounts"}, allowGetters = true)
+@JsonIgnoreProperties(value = {"discounts"}, allowGetters = true)
 public class ChannelDTO {
     @JsonIgnore
     private Long id;

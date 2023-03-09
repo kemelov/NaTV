@@ -1,26 +1,25 @@
 package kg.natv.TextAd.models.DTOs;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
+import kg.natv.TextAd.models.Channel;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
-@JsonIgnoreProperties(value = {"isActive"}, allowGetters = true)
+@JsonIgnoreProperties(value = {"startDate", "endDate", "isActive"})
 public class DiscountDTO {
     @JsonIgnore
     private Long id;
     private int discount;
     private int fromDayCount;
     private boolean isActive;
-    private Long channelId;
-
     @JsonFormat(pattern = "dd-MM-yyyy' 'HH:mm:ss")
-    @JsonIgnore
     private LocalDateTime startDate;
     @JsonFormat(pattern = "dd-MM-yyyy' 'HH:mm:ss")
-    @JsonIgnore
     private LocalDateTime endDate;
+    private Long channelId;
+
 }

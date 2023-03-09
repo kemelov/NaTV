@@ -11,4 +11,6 @@ public interface DiscountRepo extends JpaRepository<Discount, Long> {
     @Transactional
     @Query(value = "SELECT setval('tb_discount_id_seq', coalesce((SELECT MAX(id) FROM tb_discount), 1));", nativeQuery = true)
     void resetAutoIncrement();
+
+
 }
