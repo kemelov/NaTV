@@ -42,8 +42,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(JsonProcessingException.class)
-    public ResponseEntity<ErrorResponse> handleJsonProcessingException(JsonProcessingException ex) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         List<String> errors = new ArrayList<>();
         errors.add(ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, errors);
