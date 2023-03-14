@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus{
     PAYED("Оплачен"),
-    AWAITING("В ожидании"),
+    AWAITING("В ожидании оплаты"),
     DECLINED("Отменён");
 
     private final String status;

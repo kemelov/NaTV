@@ -25,9 +25,6 @@ public class Channel {
     private double pricePerLetter;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
-    private List<Price> prices;
-
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<Discount> discounts = new ArrayList<>();
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)

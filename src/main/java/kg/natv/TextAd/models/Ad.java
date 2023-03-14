@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -25,12 +24,12 @@ public class Ad {
     private String text;
     private int symbolCount;
     private Long daysCount;
-    @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy' 'HH:mm:ss")
     private LocalDateTime startDate;
-    @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy' 'HH:mm:ss")
     private LocalDateTime endDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Order order;
 

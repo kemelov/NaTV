@@ -4,16 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import kg.natv.TextAd.mappers.ChannelMapper;
 import kg.natv.TextAd.models.Channel;
-import kg.natv.TextAd.models.DTOs.ChannelDTO;
+import kg.natv.TextAd.models.DTOs.*;
 import kg.natv.TextAd.repositories.ChannelRepo;
+import kg.natv.TextAd.services.PriceService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @Service
@@ -21,11 +24,13 @@ public class ChannelServiceImpl implements kg.natv.TextAd.services.ChannelServic
     private final ChannelRepo channelRepo;
     private final ChannelMapper channelMapper;
     private final ObjectMapper objectMapper;
+    private final PriceService priceService;
 
-    public ChannelServiceImpl(ChannelRepo channelRepo, ChannelMapper channelMapper, ObjectMapper objectMapper){
+    public ChannelServiceImpl(ChannelRepo channelRepo, ChannelMapper channelMapper, ObjectMapper objectMapper, @Lazy PriceService priceService){
         this.channelRepo = channelRepo;
         this.channelMapper = channelMapper;
         this.objectMapper = objectMapper;
+        this.priceService = priceService;
     }
 
     @Override
@@ -52,6 +57,32 @@ public class ChannelServiceImpl implements kg.natv.TextAd.services.ChannelServic
 //        Stream<Channel> sortedChannels = channels.stream().sorted((Comparator.comparing(Channel::isActive).reversed()));
 //        channels = sortedChannels.collect(Collectors.toList());
         return channelMapper.toDTOList(channels);
+    }
+
+
+    @Override
+    public PriceDTO calculate(PriceDTO priceDTO) {
+        ChannelDTO channel = findById(priceDTO.getChannelId());
+        if (!channel.isActive()){
+            throw new IllegalArgumentException("Выбранный канал неактивный: "+channel.getName()+" id "+channel.getId());
+        }
+        for (LocalDate date : priceDTO.getOrderDateDTO().getDays()) {
+            if (date.isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("Ошибка! Выбран прошедший день "
+                        +date.format(DateTimeFormatter.ofPattern("dd-MM-yyy")));
+            }
+        }
+
+        priceDTO.getOrderDateDTO().setDays(priceDTO.getOrderDateDTO().getDays());
+        priceDTO.setDaysCount((long) priceDTO.getOrderDateDTO().getDays().size());
+        priceDTO.setSymbolCount(priceDTO.getText().replaceAll(" ", "").length());
+        priceDTO.setChannelId(priceDTO.getChannelId());
+        priceDTO.setStartDate(Objects.requireNonNull(priceDTO.getOrderDateDTO().getDays().stream().min(LocalDate::compareTo).orElse(null)).atStartOfDay());
+        priceDTO.setEndDate(Objects.requireNonNull(priceDTO.getOrderDateDTO().getDays().stream().max(LocalDate::compareTo).orElse(null)).atStartOfDay());
+
+        priceService.calculatePrice(priceDTO);
+        priceService.calculatePriceWithDiscount(priceDTO);
+        return priceDTO;
     }
 
     @Override

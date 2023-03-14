@@ -2,11 +2,11 @@ package kg.natv.TextAd.configurations;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import kg.natv.TextAd.mappers.AdMapper;
-import kg.natv.TextAd.mappers.ChannelMapper;
-import kg.natv.TextAd.mappers.DiscountMapper;
-import kg.natv.TextAd.mappers.OrderDateMapper;
+import kg.natv.TextAd.mappers.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +32,15 @@ public class AppConfig {
     public OrderDateMapper orderDateMapper(){
         return OrderDateMapper.INSTANCE;
     }
+
+    @Bean
+    public OrderMapper orderMapper(){
+        return OrderMapper.INSTANCE;
+    }
+    @Bean
+    public PriceMapper priceMapper(){
+        return PriceMapper.INSTANCE;
+    }
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -39,4 +48,5 @@ public class AppConfig {
         objectMapper.registerModule(new JavaTimeModule());
         return objectMapper;
     }
+
 }

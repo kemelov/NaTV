@@ -6,8 +6,6 @@ import kg.natv.TextAd.mappers.AdMapper;
 import kg.natv.TextAd.models.Ad;
 import kg.natv.TextAd.models.Channel;
 import kg.natv.TextAd.models.DTOs.AdDTO;
-import kg.natv.TextAd.models.DTOs.OrderDateDTO;
-import kg.natv.TextAd.models.OrderDate;
 import kg.natv.TextAd.repositories.AdRepo;
 import kg.natv.TextAd.repositories.ChannelRepo;
 import kg.natv.TextAd.services.AdService;
@@ -16,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -61,18 +60,27 @@ public class AdServiceImpl implements AdService {
         if (channel.isEmpty()){
             throw new NoSuchElementException("Нет канала с такиим ID");
         }
+
+        if (adDTO.getOrderDateDTO().getDays().isEmpty()){
+            throw new IllegalArgumentException("Ошибка! не выбран день.");
+        }
+
         for (LocalDate date : adDTO.getOrderDateDTO().getDays()) {
             if (date.isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException("Ошибка! Выбран прошедший день "+date);
             }
         }
+
+
         Channel exChannel = channel.get();
         Ad ad = adMapper.toEntity(adDTO);
         ad.setChannel(channel.get());
-        ad.setSymbolCount(ad.getText().length());
+        ad.setSymbolCount(ad.getText().replaceAll(" ", "").length());
         ad.getOrderDate().setDays(adDTO.getOrderDateDTO().getDays());
         ad.getOrderDate().setAd(ad);
         ad.setDaysCount((long) ad.getOrderDate().getDays().size());
+        ad.setStartDate(LocalDateTime.now());
+        ad.setEndDate(LocalDateTime.now().plusDays(ad.getDaysCount()));
         ad = adRepo.save(ad);
 
         AdDTO savedAdDTO = adMapper.toDTO(ad);

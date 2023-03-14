@@ -6,13 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 import kg.natv.TextAd.validations.Create;
 import lombok.Data;
 
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Set;
 
 @Data
 public class OrderDateDTO {
@@ -22,7 +18,8 @@ public class OrderDateDTO {
     @ApiModelProperty(example = "[\"01-01-2023\"]")
     @JsonFormat(pattern = "dd-MM-yyyy")
     @NotNull(message = "обязательное поле", groups = Create.class)
-    private List<LocalDate> days;
+    private Set<LocalDate> days;
+
     @JsonIgnore
     private Long adId;
 }

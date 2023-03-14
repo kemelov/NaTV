@@ -1,12 +1,11 @@
 package kg.natv.TextAd.models.DTOs;
 
-import com.fasterxml.jackson.annotation.*;
-import kg.natv.TextAd.models.Channel;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @JsonIgnoreProperties(value = {"startDate", "endDate", "isActive"})

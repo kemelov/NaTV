@@ -4,18 +4,16 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Converter
-public class LocalDateListConverter implements AttributeConverter<List<LocalDate>, String> {
+public class LocalDateSetConverter implements AttributeConverter<Set<LocalDate>, String> {
     private static final String DATE_DELIMITER = ",";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     @Override
-    public String convertToDatabaseColumn(List<LocalDate> dates) {
+    public String convertToDatabaseColumn(Set<LocalDate> dates) {
         if (dates == null || dates.isEmpty()) {
             return null;
         }
@@ -25,12 +23,12 @@ public class LocalDateListConverter implements AttributeConverter<List<LocalDate
     }
 
     @Override
-    public List<LocalDate> convertToEntityAttribute(String dbData) {
+    public Set<LocalDate> convertToEntityAttribute(String dbData) {
         if (dbData == null || dbData.isEmpty()) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
         String[] dateTokens = dbData.split(DATE_DELIMITER);
-        List<LocalDate> dates = new ArrayList<>(dateTokens.length);
+        Set<LocalDate> dates = new HashSet<>(dateTokens.length);
         for (String dateToken : dateTokens) {
             dates.add(LocalDate.parse(dateToken, FORMATTER));
         }
