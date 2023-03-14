@@ -21,19 +21,25 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm:ss")
+    private String text;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdDate;
     private String email;
     private String fio;
     private String phone;
     private BigDecimal totalPrice;
+
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ad> ads;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Price> prices;
+
 }
 
 
