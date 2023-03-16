@@ -1,0 +1,41 @@
+Index: src/main/java/kg/natv/TextAd/mappers/OrderStatusMapper.java
+===================================================================
+diff --git a/src/main/java/kg/natv/TextAd/mappers/OrderStatusMapper.java b/src/main/java/kg/natv/TextAd/mappers/OrderStatusMapper.java
+deleted file mode 100644
+--- a/src/main/java/kg/natv/TextAd/mappers/OrderStatusMapper.java	(revision bca46bcfb0172d95ca1f1927ba53ade9dc20ba54)
++++ /dev/null	(revision bca46bcfb0172d95ca1f1927ba53ade9dc20ba54)
+@@ -1,19 +0,0 @@
+-package kg.natv.TextAd.mappers;
+-
+-import kg.natv.TextAd.models.Ad;
+-import kg.natv.TextAd.models.DTOs.AdDTO;
+-import kg.natv.TextAd.models.DTOs.OrderStatusDTO;
+-import kg.natv.TextAd.models.OrderStatus;
+-import org.mapstruct.Mapper;
+-import org.mapstruct.factory.Mappers;
+-
+-import java.util.List;
+-
+-@Mapper
+-public interface OrderStatusMapper {
+-    OrderStatusMapper INSTANCE = Mappers.getMapper(OrderStatusMapper.class);
+-    OrderStatusDTO ToDTO(OrderStatus orderStatus);
+-    OrderStatus toEntity(OrderStatusDTO orderStatusDTO);
+-    List<OrderStatusDTO> toDTOList(List<OrderStatus>orderStatusList);
+-    List<OrderStatus>toEntityList(List<OrderStatusDTO>orderStatusDTOList);
+-}
+Index: src/main/java/kg/natv/TextAd/models/DTOs/OrderStatusDTO.java
+===================================================================
+diff --git a/src/main/java/kg/natv/TextAd/models/DTOs/OrderStatusDTO.java b/src/main/java/kg/natv/TextAd/models/DTOs/OrderStatusDTO.java
+deleted file mode 100644
+--- a/src/main/java/kg/natv/TextAd/models/DTOs/OrderStatusDTO.java	(revision bca46bcfb0172d95ca1f1927ba53ade9dc20ba54)
++++ /dev/null	(revision bca46bcfb0172d95ca1f1927ba53ade9dc20ba54)
+@@ -1,8 +0,0 @@
+-package kg.natv.TextAd.models.DTOs;
+-
+-import lombok.Data;
+-
+-@Data
+-public class OrderStatusDTO {
+-    private String status;
+-}
